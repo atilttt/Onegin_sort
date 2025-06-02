@@ -1,1 +1,4 @@
 *.out
+*.json
+*.vscode
+*.md
