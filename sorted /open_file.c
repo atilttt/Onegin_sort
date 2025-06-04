@@ -1,8 +1,8 @@
 #include "open_file.h"
 
-void open_file()
+void open_file(const char *filename)
 { 
-    FILE *fp = fopen("onegin.txt", "r");
+    FILE *fp = fopen(filename, "r");
     if(!fp)
     { 
         printf("File not open. :/\n");
@@ -11,7 +11,7 @@ void open_file()
 
     int number_of_lines = 0, number_of_words = 0;
     int check = 0;
-    
+
     check_numbers_of_lines(fp, &number_of_lines, &check);
     if (check == 0)       
     {
@@ -36,22 +36,26 @@ void open_file()
         default: 
             printf("Nice, your file have %d lines and %d words.\n", number_of_lines + 1, number_of_words); //+1 потому что ласт строку он не посчитает
     }
-    
+
     fclose(fp);
 }
 
-void check_numbers_of_lines(FILE *filename, int* number_of_lines, int* check)
+void check_numbers_of_lines(FILE *pointer_name, int* number_of_lines, int* check)
 { 
+    assert(pointer_name != NULL);
+    assert(number_of_lines != NULL);
+    assert(check != NULL);
+    
     char counter_end_lines = 0;
 
-    while((counter_end_lines = fgetc(filename)) != EOF)
+    while((counter_end_lines = fgetc(pointer_name)) != EOF)
     {
         if (counter_end_lines == '\n')
         {
             (*number_of_lines)++;
         }
     }
-    
+
     if (*number_of_lines == 0)
     {
         *check = file_is_empty;
@@ -63,11 +67,15 @@ void check_numbers_of_lines(FILE *filename, int* number_of_lines, int* check)
 
 }
 
-void check_words_in_file(FILE *filename, int* number_of_words, int* check)
+void check_words_in_file(FILE *pointer_name, int* number_of_words, int* check)
 { 
+    assert(pointer_name != NULL);
+    assert(number_of_words != NULL);
+    assert(check != NULL);
+
     char symbol_space = 0;
 
-    while((symbol_space = fgetc(filename)) != EOF)
+    while((symbol_space = fgetc(pointer_name)) != EOF)
     {
         if (symbol_space == ' ') (*number_of_words)++;
     }
