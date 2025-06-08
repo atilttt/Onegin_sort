@@ -9,6 +9,26 @@ void check_pointer(FILE *pointer_name_on_file)
     }
 }
 
+void free_memory_array(WORK_TEXT *wt, int choose)
+{ 
+    assert(wt != NULL);
+
+    if (choose = array_of_char)
+    {
+        free(wt->text);
+        wt->text = NULL;
+    }
+    else 
+    { 
+        for (size_t i = 0; i < wt->line_in_file; i++)
+        {
+            free(wt->text_line[i]); 
+        }
+        free(wt->text_line);
+        wt->text_line = NULL;
+    }
+}
+
 size_t counting_lines(FILE *pointer_name_on_file)
 {
     check_pointer(pointer_name_on_file);
@@ -27,14 +47,14 @@ size_t counting_lines(FILE *pointer_name_on_file)
     return line;
 }
 
-size_t all_symbol_in_the_file(FILE *pointer_name)
+size_t all_symbol_in_file(FILE *pointer_name_of_file)
 {
-    check_pointer(pointer_name);
-    rewind(pointer_name);
+    check_pointer(pointer_name_of_file);
+    rewind(pointer_name_of_file);
 
     size_t all_symbol = 0;
     char c = 0;
-    while ((c = fgetc(pointer_name)) != EOF)
+    while ((c = fgetc(pointer_name_of_file)) != EOF)
     {
         all_symbol++;
     }
@@ -77,6 +97,9 @@ void created_array_for_saved(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_s
 
 }
 
+
+//мне не оч нравится реализация этих функций что array_for_saved, что created_array_string, но по другому я не придумал, еще и зубчатый массив
+//я начал читать про структуры и про динам. память и там был он, я посчитал, что это идеальное решение для меня, но возможно я ошибаюсь.
 void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_name_on_struct)
 { 
     check_pointer(pointer_name_on_file);
@@ -90,9 +113,22 @@ void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_name_on
         abort();
     }
 
-    for (size_t i = 0; i < pointer_name_on_struct->line_in_file; i++)
+    char *ptr_text = pointer_name_on_struct->text;
+    size_t line = 0;
+    
+    while (line < pointer_name_on_struct->line_in_file)
     { 
-        ;
+        size_t len = strlen(ptr_text);
+        pointer_name_on_struct->text_line[line] = calloc(len + 1, sizeof(char)); //'\0' не забываем
+        strcpy(pointer_name_on_struct->text_line[line], ptr_text);
+        if (pointer_name_on_struct->text_line[line] == NULL)
+        { 
+            printf("No memory allocated\n");
+            free_memory_array(pointer_name_on_struct, array_of_strings);
+            abort();
+        }
+        ptr_text += len + 1;
+        line++;
     }
-
 }
+

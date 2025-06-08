@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 //this is struct for work with file
 typedef struct
@@ -14,13 +15,18 @@ typedef struct
     char** text_line;
 } WORK_TEXT;
 
+enum free_memory_choose
+{
+    array_of_char = 1, array_of_strings = 2
+};
+
 
 /**
  * @brief this function checks the pointer to the open file.
  * @param *pointer_name_on_file - the name of the pointer to the open file
  * @return it does not return, but closes the program if the pointer is null.
  */
-void pointer_check(FILE* pointer_name_on_file);
+void check_pointer(FILE* pointer_name_on_file);
 
 /**
  * @brief this function counting the lines in file
@@ -41,7 +47,7 @@ size_t all_symbol_in_file(FILE *pointer_name_on_file);
  * @param *pointer_name_on_file - the name of the pointer to the open file
  * @param *pointer_on_struct - pointer on the struct
  */
-void created_array_for_save(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_struct);
+void created_array_for_saved(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_struct);
 
 /**
  * @brief this function creates an array of strings to sort the text later.
@@ -49,5 +55,12 @@ void created_array_for_save(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_st
  * @param *pointer_on_struct - pointer on the struct
  */
 void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_struct);
+
+/**
+ * @brief this function frees up the memory allocated for the array.
+ * @param *wt this is a pointer to the structure that contains the array.
+ * @param 
+ */
+void free_memory_for_array(WORK_TEXT *wt, int choose);
 
 #endif //HAMLET_H
