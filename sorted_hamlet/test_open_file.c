@@ -37,6 +37,7 @@ void open_file(const char *filename)
             break;
         default:
             printf("I don't know what happened, but I do know that I respect Daniil Paramonov.\n");
+            exit(1);
             break;
     } 
 }

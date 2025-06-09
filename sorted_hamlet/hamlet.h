@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <ctype.h>
 
 //this is struct for work with file
 typedef struct
@@ -61,6 +62,9 @@ void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_stru
  * @param *wt this is a pointer to the structure that contains the array.
  * @param 
  */
-void free_memory_for_array(WORK_TEXT *wt, int choose);
+void free_memory_array(WORK_TEXT *wt, int choose);
+
+
+void test_write_file(WORK_TEXT *wt, const char * filename);
 
 #endif //HAMLET_H

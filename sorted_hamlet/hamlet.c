@@ -13,7 +13,7 @@ void free_memory_array(WORK_TEXT *wt, int choose)
 { 
     assert(wt != NULL);
 
-    if (choose = array_of_char)
+    if (choose == array_of_char)
     {
         free(wt->text);
         wt->text = NULL;
@@ -68,14 +68,15 @@ void created_array_for_saved(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_s
     assert(pointer_on_struct != NULL);
     rewind(pointer_name_on_file);
 
-    pointer_on_struct->line_in_file = counting_line(pointer_name_on_file);
+    pointer_on_struct->line_in_file = counting_lines(pointer_name_on_file);
     pointer_on_struct->all_symbol = all_symbol_in_file(pointer_name_on_file);
+    rewind(pointer_name_on_file);
 
-    pointer_on_struct->text = calloc(pointer_on_struct->all_symbol, sizeof(char));
+    pointer_on_struct->text = calloc(pointer_on_struct->all_symbol + 1, sizeof(char));
     if (pointer_on_struct->text == NULL)
     { 
         printf("No memory allocated.\n");
-        fclose(pointer_name_on_file);
+        free_memory_array(pointer_on_struct, array_of_char);
         abort(); 
     }
 
@@ -105,30 +106,60 @@ void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_name_on
     check_pointer(pointer_name_on_file);
     assert(pointer_name_on_struct); 
     
-    pointer_name_on_struct->text_line = calloc(pointer_name_on_struct->line_in_file, sizeof(char *)); 
+    pointer_name_on_struct->text_line = calloc(pointer_name_on_struct->line_in_file, sizeof(char*));
     if (pointer_name_on_struct->text_line == NULL)
     {
-        printf("No memory allocated.\n");
-        free(pointer_name_on_struct->text_line);
-        abort();
+        printf("Opa, pamyt ne videlilas.\n");
+        free_memory_array(pointer_name_on_struct, array_of_strings);
+        abort(); 
     }
 
-    char *ptr_text = pointer_name_on_struct->text;
-    size_t line = 0;
-    
-    while (line < pointer_name_on_struct->line_in_file)
-    { 
-        size_t len = strlen(ptr_text);
-        pointer_name_on_struct->text_line[line] = calloc(len + 1, sizeof(char)); //'\0' не забываем
-        strcpy(pointer_name_on_struct->text_line[line], ptr_text);
-        if (pointer_name_on_struct->text_line[line] == NULL)
+    char *ptr = pointer_name_on_struct->text;
+    int new_sorted_line = 0;
+
+    for (size_t i = 0; i < pointer_name_on_struct->line_in_file; i++)
+    {
+        if (*ptr == '\0')
         { 
-            printf("No memory allocated\n");
-            free_memory_array(pointer_name_on_struct, array_of_strings);
-            abort();
+            ptr++;
+            continue;
         }
-        ptr_text += len + 1;
-        line++;
+
+        while(isspace(*ptr)) ptr++;
+
+        if (*ptr == '\0')
+        { 
+            ptr++;
+            continue;
+        }
+
+        size_t len = strlen(ptr);
+        pointer_name_on_struct->text_line[new_sorted_line] = calloc(len + 1, sizeof(char));
+        if (pointer_name_on_struct->text_line[new_sorted_line] == NULL)
+        {
+            printf("Opa, pamyt ne videlilas.\n");
+            free_memory_array(pointer_name_on_struct, array_of_strings);
+            abort(); 
+        }  
+        strcpy(pointer_name_on_struct->text_line[new_sorted_line], ptr);
+        ptr += len + 1;
+        new_sorted_line++; 
     }
+
+    pointer_name_on_struct->line_in_file = new_sorted_line; //для qsort, да и в целом пустая строка по моему не строк, поэтому такая сортировка, и меняем количество
+    
 }
 
+void test_write_file(WORK_TEXT *wt, const char * filename)
+{ 
+    FILE *fp = fopen(filename, "w");
+    check_pointer(fp);
+
+    for (size_t i = 0; i < wt->line_in_file; i++)
+    { 
+        fputs(wt->text_line[i], fp);
+        fputc('\n', fp);
+    }
+    
+    fclose(fp);
+}
