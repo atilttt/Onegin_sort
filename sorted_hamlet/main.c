@@ -26,7 +26,7 @@ int main() {
     the_end(output, original, &wt);
     
     hach_edition_qsort(&wt, 0, wt.line_in_file-1, comp_by_beginning);
-    fprintf(output, "\n\n||||||||||ABCDEFGHIJKLMN||||||||||\n\n");
+    fprintf(output, "\n\n|||||||||||ABCDEFGHIJKLMN||||||||||\n\n");
     the_end(output, sorted, &wt);
     
     memcpy(wt.text_line, alphabet_sorted, wt.line_in_file * sizeof(char*));
