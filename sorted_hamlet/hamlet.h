@@ -1,3 +1,10 @@
+//Я, конечно, после ревью исправлю все комментарии и прочую тему, ну, брат, я ща собираюсь это пушить
+//И код конечно выглядит ебано, прям очень, ну типо, файл читаю посимвольно, что долго, копирую массивы и т.д.
+//Я исправлю все, ток вот пока сидел думал как, но как будто всю логику заново писать
+//Тада вопрос, а смысл кидать этот. Ну во первых, хочу тя послушать, в чем я не прав, че стоит почитать
+//А во вторых, ну я писатель я так вижу :)
+
+
 #ifndef HAMLET_H
 #define HAMLET_H
 
@@ -20,7 +27,6 @@ enum free_memory_choose
 {
     array_of_char = 1, array_of_strings = 2
 };
-
 
 /**
  * @brief this function checks the pointer to the open file.
@@ -64,7 +70,43 @@ void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_stru
  */
 void free_memory_array(WORK_TEXT *wt, int choose);
 
+/**
+ * @brief comparator for hach edition, which is used to sort by beginning
+ * @param *a pointer to an array element
+ * @param *b pointer to an array element
+ * @return 
+ */
+int comp_by_beginning(const void *a, const void *b);
 
-void test_write_file(WORK_TEXT *wt, const char * filename);
+/**
+ * @brief
+ * @param 
+ * @param 
+ * @return
+ */
+int comp_by_rhyme(const void *a, const void *b);
+
+/**
+ * @brief this function swaps the sorted elements (needed for bubble sort)
+ * @param **array - this is an array of strings that we will sort.
+ * @param i - the element that is in the current position
+ * @param j - the next element of the array
+ * @param *wt - a pointer to the struct
+ */
+void swap_element_array(char *array, size_t i, size_t j);
+
+/**
+ * @brief needs no introduction
+ */
+void bubble_sorte(WORK_TEXT *wt);
+
+/**
+ * @brief arrat sorting function
+ * @param *wt - a pointer to the struct
+ * @param count - the number of elements in the array 
+ * @param size - the size of each element
+ * @param *comp this is a pointer to the comparator function 
+ */
+void hach_edition_qsort(WORK_TEXT *wt, size_t count, size_t size, int (*comp)(const void *a, const void *b));
 
 #endif //HAMLET_H

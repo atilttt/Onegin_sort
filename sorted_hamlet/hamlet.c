@@ -117,6 +117,7 @@ void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_name_on
     char *ptr = pointer_name_on_struct->text;
     int new_sorted_line = 0;
 
+    //ну очень интересный метод файл обработать
     for (size_t i = 0; i < pointer_name_on_struct->line_in_file; i++)
     {
         if (*ptr == '\0')
@@ -146,8 +147,8 @@ void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_name_on
         new_sorted_line++; 
     }
 
-    pointer_name_on_struct->line_in_file = new_sorted_line; //для qsort, да и в целом пустая строка по моему не строк, поэтому такая сортировка, и меняем количество
-    
+    pointer_name_on_struct->line_in_file = new_sorted_line; //для qsort, да и в целом пустая строка по моему не строка, поэтому такая сортировка, и меняем количество, хотя бля, это не грамнотно
+                                                            //но сортировать то я буду массив text_line, а буффер - есть буффер епт, ток он у меня text называется   
 }
 
 void test_write_file(WORK_TEXT *wt, const char * filename)
