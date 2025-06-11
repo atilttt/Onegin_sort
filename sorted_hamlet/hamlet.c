@@ -101,9 +101,8 @@ void created_array_for_saved(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_s
 
 //мне не оч нравится реализация этих функций что array_for_saved, что created_array_string, но по другому я не придумал, еще и зубчатый массив
 //я начал читать про структуры и про динам. память и там был он, я посчитал, что это идеальное решение для меня, но возможно я ошибаюсь.
-void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_name_on_struct)
+void created_array_string(WORK_TEXT *pointer_name_on_struct)
 { 
-    check_pointer(pointer_name_on_file);
     assert(pointer_name_on_struct); 
     
     pointer_name_on_struct->text_line = calloc(pointer_name_on_struct->line_in_file, sizeof(char*));
@@ -151,16 +150,33 @@ void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_name_on
                                                             //но сортировать то я буду массив text_line, а буффер - есть буффер епт, ток он у меня text называется   
 }
 
-void test_write_file(WORK_TEXT *wt, const char * filename)
-{ 
-    FILE *fp = fopen(filename, "w");
-    check_pointer(fp);
-
-    for (size_t i = 0; i < wt->line_in_file; i++)
-    { 
-        fputs(wt->text_line[i], fp);
-        fputc('\n', fp);
-    }
+void the_end(FILE *pointer_name, int choose, WORK_TEXT *wt) 
+{
+    check_pointer(pointer_name);
+    assert(wt);
     
-    fclose(fp);
+    if (choose == original) 
+    {
+        for (size_t i = 0; i < wt->all_symbol;) 
+        {
+            if (wt->text[i] == '\0') 
+            {
+                fputc('\n', pointer_name);
+                i++;
+            } else 
+            {
+                fputc(wt->text[i++], pointer_name);
+            }
+        }
+    } 
+    else 
+    {
+        for (size_t i = 0; i < wt->line_in_file; i++) 
+        {
+            fputs(wt->text_line[i], pointer_name);
+            fputc('\n', pointer_name);
+        }
+    }
+
+    fprintf(pointer_name, "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"); //это для души
 }

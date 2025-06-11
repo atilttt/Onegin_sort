@@ -60,13 +60,56 @@ int comp_by_rhyme(const void *a, const void *b)
     }
 
     if (s1 < *(const char **)a && s2 >= *(const char **)b) return -1;
-    else return 1;
+    if (s2 < *(const char **)b && s1 >= *(const char **)a) return 1;
 
     return 0;
 
 }
 
-void hach_edition_qsort(WORK_TEXT *wt, size_t count, size_t size, int (*comp)(const void *b, const void *a))
-{ 
-    
+void swap_element_array(char **array, size_t i, size_t j)
+{   
+    char *temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+}
+
+void bubble_sorte(WORK_TEXT *wt)
+{
+    for (size_t i = 0; i < wt->line_in_file - 1; i++)
+    { 
+        for (size_t j = 0; j < wt->line_in_file - i - 1; j++)
+        { 
+            if (comp_by_beginning(&(wt->text_line[j]), &(wt->text_line[j + 1])) > 0)
+            { 
+                swap_element_array(wt->text_line, j, j+1);
+            }
+        }
+    }
+}
+
+
+//я бы даже назвал хач Ломуто эдишн
+void hach_edition_qsort(WORK_TEXT *wt, size_t low, size_t high, int (*comp)(const void *a, const void *b))
+{
+    if (low >= high)
+        return;
+
+    char **array = wt->text_line;
+
+    char *pivot = array[high];
+    size_t i = low;
+
+    for (size_t j = low; j < high; j++)
+    {
+        if (comp(&array[j], &pivot) < 0)
+        {
+            swap_element_array(array, i, j);
+            i++;
+        }
+    }
+
+    swap_element_array(array, i, high);
+
+    if (i > 0) hach_edition_qsort(wt, low, i - 1, comp); 
+    hach_edition_qsort(wt, i + 1, high, comp);           
 }

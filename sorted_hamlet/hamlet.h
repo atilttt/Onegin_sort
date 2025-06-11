@@ -28,6 +28,11 @@ enum free_memory_choose
     array_of_char = 1, array_of_strings = 2
 };
 
+enum write
+{ 
+    original = 0, sorted = 1
+}; 
+
 /**
  * @brief this function checks the pointer to the open file.
  * @param *pointer_name_on_file - the name of the pointer to the open file
@@ -57,11 +62,10 @@ size_t all_symbol_in_file(FILE *pointer_name_on_file);
 void created_array_for_saved(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_struct);
 
 /**
- * @brief this function creates an array of strings to sort the text later.
- * @param *pointer_name_on_file - the name of the pointer to the open file 
+ * @brief this function creates an array of strings to sort the text later. 
  * @param *pointer_on_struct - pointer on the struct
  */
-void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_struct);
+void created_array_string(WORK_TEXT *pointer_on_struct);
 
 /**
  * @brief this function frees up the memory allocated for the array.
@@ -71,18 +75,18 @@ void created_array_string(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_stru
 void free_memory_array(WORK_TEXT *wt, int choose);
 
 /**
- * @brief comparator for hach edition, which is used to sort by beginning
+ * @brief comparator, which is used to sort by beginning
  * @param *a pointer to an array element
  * @param *b pointer to an array element
- * @return 
+ * @return 0 -> a = b, 1 -> a > b, -1 a < b 
  */
 int comp_by_beginning(const void *a, const void *b);
 
 /**
- * @brief
- * @param 
- * @param 
- * @return
+ * @brief a comparator that is used to sort by rhyme
+ * @param *a pointer to an array element
+ * @param *b pointer to an array element
+ * @return 0 -> a = b, 1 -> a > b, -1 -> a < b
  */
 int comp_by_rhyme(const void *a, const void *b);
 
@@ -93,12 +97,12 @@ int comp_by_rhyme(const void *a, const void *b);
  * @param j - the next element of the array
  * @param *wt - a pointer to the struct
  */
-void swap_element_array(char *array, size_t i, size_t j);
+void swap_element_array(char **array, size_t i, size_t j);
 
 /**
  * @brief needs no introduction
  */
-void bubble_sorte(WORK_TEXT *wt);
+void bubble_sort(WORK_TEXT *wt);
 
 /**
  * @brief arrat sorting function
@@ -108,5 +112,12 @@ void bubble_sorte(WORK_TEXT *wt);
  * @param *comp this is a pointer to the comparator function 
  */
 void hach_edition_qsort(WORK_TEXT *wt, size_t count, size_t size, int (*comp)(const void *a, const void *b));
+
+/**
+ * @brief this function is the final one, we write everything to a file output.txt And that's it.
+ * @param *pointer_name - the name of the pointer to the open file
+ * @param name - name your file
+ */
+void the_end(FILE *pointer_name, int choose, WORK_TEXT *wt);
 
 #endif //HAMLET_H
