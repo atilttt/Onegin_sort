@@ -1,7 +1,6 @@
 #include "hamlet.h"
 
 int main() {
-    // 1. Открытие файлов
     FILE *input = fopen("hamlet.txt", "r");
     FILE *output = fopen("output.txt", "w");
     check_pointer(input);
