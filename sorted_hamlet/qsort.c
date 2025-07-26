@@ -33,48 +33,58 @@ int comp_by_beginning(const void *a, const void *b)
 
 int comp_by_rhyme(const void *a, const void *b)
 { 
-    assert(a != NULL);
-    assert(b != NULL);
+    assert(a);
+    assert(b);
 
     const char *s1 = *(const char **)a;
     const char *s2 = *(const char **)b;
 
-    size_t size_s1 = strlen(s1) - 1; //'\0'
-    size_t size_s2 = strlen(s2) - 1; //'\0'
+    assert(s1);
+    assert(s2);
 
-    s1 += size_s1;
-    s2 += size_s2;
+    int size_string_s1 = strlen(s1);
+    int size_string_s2 = strlen(s2);
 
-    while (s1 >= *(const char **)a && s2 >= *(const char **)b)
+    if (size_string_s1 == 0 && size_string_s2 == 0) return 0;
+    if (size_string_s1 == 0 && size_string_s2 != 0) return -1;
+    if (size_string_s1 != 0 && size_string_s2 == 0) return 1;
+
+    const char *new_s1 = s1 + size_string_s1 - 1; // обработка '\0'
+    const char *new_s2 = s2 + size_string_s2 - 1; //обработка '\0'
+
+    while (new_s1 >= s1 && new_s2 >= s2)
     { 
-        while(s1 >= *(const char**)a && isalpha(*s1) == 0) s1--;
-        while(s2 >= *(const char **)b && isalpha(*s2) == 0) s2--;
-        
-        if (*s1 != *s2)
+        while (new_s1 >= s1 && isalpha(*new_s1) == 0) new_s1--;
+        while (new_s2 >= s2 && isalpha(*new_s2) == 0) new_s2--;
+
+        if (*new_s1 != *new_s2)
         {
-            return (*s1 < *s2) ? -1 : 1;
+            return (*new_s1 < *new_s2) ? -1 : 1; 
         }
-        
-        s1--;
-        s2--;
+        new_s1--;
+        new_s2--;
     }
 
-    if (s1 < *(const char **)a && s2 >= *(const char **)b) return -1;
-    if (s2 < *(const char **)b && s1 >= *(const char **)a) return 1;
-
-    return 0;
+    if (new_s1 < s1 && new_s2 < s2) return 0; 
+    if (new_s1 < s1) return -1;
+    if (new_s2 < s2) return 1;
 
 }
 
 void swap_element_array(char **array, size_t i, size_t j)
 {   
+    assert(array);
+
     char *temp = array[i];
     array[i] = array[j];
     array[j] = temp;
 }
 
-void bubble_sorte(WORK_TEXT *wt)
+void bubble_sort(WORK_TEXT *wt)
 {
+    assert(wt);
+
+
     for (size_t i = 0; i < wt->line_in_file - 1; i++)
     { 
         for (size_t j = 0; j < wt->line_in_file - i - 1; j++)
@@ -91,6 +101,10 @@ void bubble_sorte(WORK_TEXT *wt)
 //я бы даже назвал хач Ломуто эдишн
 void hach_edition_qsort(WORK_TEXT *wt, size_t low, size_t high, int (*comp)(const void *a, const void *b))
 {
+    assert(wt);
+    assert(comp);
+
+
     if (low >= high)
         return;
 

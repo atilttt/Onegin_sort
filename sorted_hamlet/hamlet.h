@@ -1,12 +1,7 @@
-//Я, конечно, после ревью исправлю все комментарии и прочую тему, ну, брат, я ща собираюсь это пушить
-//И код конечно выглядит ебано, прям очень, ну типо, файл читаю посимвольно, что долго, копирую массивы и т.д.
-//Я исправлю все, ток вот пока сидел думал как, но как будто всю логику заново писать
-//Тада вопрос, а смысл кидать этот. Ну во первых, хочу тя послушать, в чем я не прав, че стоит почитать
-//А во вторых, ну я писатель я так вижу :)
-
-
 #ifndef HAMLET_H
 #define HAMLET_H
+
+#define SYMBOL_IN_FILE_NAME 200 //see the main
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,65 +9,101 @@
 #include <string.h>
 #include <ctype.h>
 
-//this is struct for work with file
+/**
+ * @brief this structure is designed to work with text.
+ * @param line_in_file here is the actual number of lines in the file
+ * @param all_symbol the number of all sims that are in the file
+ * @param *text this is an array for saving the source text. It was created in order to split our text into an array of strings (an array of pointers)
+ * @param **text_line and here it is, an array of pointers
+ */
 typedef struct
 {  
     size_t line_in_file;
     size_t all_symbol;
-    char* text;
-    char** text_line;
+    char *text;
+    char **text_line;
 } WORK_TEXT;
 
-enum free_memory_choose
+/**
+ * @brief these enumerations are created to free up the memory allocated for our arrays.
+ * @param array_of_char variable for clearing the array in which the source text is stored
+ * @param array_of_stringsthis variable is used to clear an array of pointers.
+ */
+enum FREE_MEMORY_CHOOSE
 {
-    array_of_char = 1, array_of_strings = 2
+    array_of_char = 1, 
+    array_of_strings = 2
 };
 
-enum write
+/**
+ * @brief these enumerations are used for the WRITE_FILE function.
+ * @param original this variable is created to record the source text.
+ * @param sorted this variable is created to record sorted text.
+ */
+enum WRITE
 { 
-    original = 0, sorted = 1
+    original = 0, 
+    sorted = 1
 }; 
 
 /**
- * @brief this function checks the pointer to the open file.
- * @param *pointer_name_on_file - the name of the pointer to the open file
- * @return it does not return, but closes the program if the pointer is null.
+ * @brief needs no introduction
  */
-void check_pointer(FILE* pointer_name_on_file);
+enum ERROR_CODE
+{
+    FILE_NOT_OPEN = 1,
+    SVORACHIVAEMSY_PAMYTI_PIZDA  = 1337, 
+    NOT_COPIED_IN_ARRAY = 2006,
+    SANYA = 2003 //в слуае, если наебланил пользователь
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////FUNCTION_FOR_WORK/////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief this function counting the lines in file
- * @param *pointer_name_on_file - the name of the pointer to the open file
- * @return number of lines read
+ * @brief This function counts the bytes in a file. Then it makes an array.
+ * @param *wt - pointer on the struct 
+ * @param *pointer_name_on_file everything is clear here anyway
  */
-size_t counting_lines(FILE *pointer_name_on_file);
+void proccesing_file(WORK_TEXT* wt, FILE *pointer_name_on_file); 
 
 /**
- * @brief this function counting all symbol in file
+ * @brief This function is used to create array for saved source text
  * @param *pointer_name_on_file - the name of the pointer to the open file
- * @return the number of all characters in the file
+ * @param *wt - pointer on the struct
  */
-size_t all_symbol_in_file(FILE *pointer_name_on_file);
-
-/**
- * @brief This function is used to create array for saved 
- * @param *pointer_name_on_file - the name of the pointer to the open file
- * @param *pointer_on_struct - pointer on the struct
- */
-void created_array_for_saved(FILE *pointer_name_on_file, WORK_TEXT *pointer_on_struct);
-
-/**
- * @brief this function creates an array of strings to sort the text later. 
- * @param *pointer_on_struct - pointer on the struct
- */
-void created_array_string(WORK_TEXT *pointer_on_struct);
+void created_array_for_saved(FILE *pointer_name_on_file, WORK_TEXT *wt);
 
 /**
  * @brief this function frees up the memory allocated for the array.
  * @param *wt this is a pointer to the structure that contains the array.
- * @param 
+ * @param choose this variable responds for choosing to clear the array //check enum
  */
 void free_memory_array(WORK_TEXT *wt, int choose);
+
+/**
+ * @brief tgis function creates an array of pointers
+ * @param *wt this is a pointer to the struct WORK_TEXT
+ */
+void create_array_strings(WORK_TEXT *wt);
+
+/**
+ * @brief this function writes data to an output file.
+ * @param *wt this is a pointer to the struct WORK_TEXT
+ * @param ara_delay_vibor this variable is responsible for selecting the recorded array (sorted or original)
+ * @param *output this is a pointer to the file
+ */
+void write_in_output_file(WORK_TEXT *wt, int ara_delay_vibor, FILE *output);
+
+/**
+ * @brief this is instruction
+ */
+void nemnoga_instruction(void);
+
+////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////FUNCTION_FOR_SORTED///////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief comparator, which is used to sort by beginning
@@ -105,19 +136,12 @@ void swap_element_array(char **array, size_t i, size_t j);
 void bubble_sort(WORK_TEXT *wt);
 
 /**
- * @brief arrat sorting function
+ * @brief array sorting function
  * @param *wt - a pointer to the struct
- * @param count - the number of elements in the array 
- * @param size - the size of each element
+ * @param low - index of the beginning of the sorted section of the array
+ * @param high - index of the end of the sorted section of the array
  * @param *comp this is a pointer to the comparator function 
  */
-void hach_edition_qsort(WORK_TEXT *wt, size_t count, size_t size, int (*comp)(const void *a, const void *b));
-
-/**
- * @brief this function is the final one, we write everything to a file output.txt And that's it.
- * @param *pointer_name - the name of the pointer to the open file
- * @param name - name your file
- */
-void the_end(FILE *pointer_name, int choose, WORK_TEXT *wt);
+void hach_edition_qsort(WORK_TEXT *wt, size_t low, size_t high, int (*comp)(const void *a, const void *b));
 
 #endif //HAMLET_H
