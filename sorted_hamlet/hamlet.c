@@ -154,5 +154,5 @@ void write_in_output_file(WORK_TEXT *wt, int ara_delay_vibor, FILE *output)
 void nemnoga_instruction(void)
 {
     printf("hi dear user, I would like to tell you this thought, that this project doesn't make much sense, but if you bitch break my code, I'll come to your city and break your nose. Read the rest in the README.\n");
-    printf("POKA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n");
+    printf("POKA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 }

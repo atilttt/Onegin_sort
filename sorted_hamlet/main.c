@@ -1,9 +1,9 @@
 #include "hamlet.h"
 
 int main(void) {
-    printf("||||||||||||||||||||||||||||||||||");
+    printf("||||||||||||||||||||||||||||||||||\n");
     nemnoga_instruction();
-    printf("||||||||||||||||||||||||||||||||||");
+    printf("||||||||||||||||||||||||||||||||||\n");
 
     FILE *input = fopen("hamlet.txt", "r"); 
     if (!input)
