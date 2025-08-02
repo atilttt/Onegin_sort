@@ -1,7 +1,7 @@
 #ifndef HAMLET_H
 #define HAMLET_H
 
-#define SYMBOL_IN_FILE_NAME 200 //see the main
+#define SYMBOL_IN_FILE_NAME 300 //see the main
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,90 +20,90 @@ typedef struct
 {  
     size_t line_in_file;
     size_t all_symbol;
-    char *text;
+    char *buffer;
     char **text_line;
 } WORK_TEXT;
 
-/**
- * @brief these enumerations are created to free up the memory allocated for our arrays.
- * @param array_of_char variable for clearing the array in which the source text is stored
- * @param array_of_stringsthis variable is used to clear an array of pointers.
- */
-enum FREE_MEMORY_CHOOSE
-{
-    array_of_char = 1, 
-    array_of_strings = 2
-};
-
-/**
- * @brief these enumerations are used for the WRITE_FILE function.
- * @param original this variable is created to record the source text.
- * @param sorted this variable is created to record sorted text.
- */
-enum WRITE
+enum ERORRS
 { 
-    original = 0, 
-    sorted = 1
-}; 
-
-/**
- * @brief needs no introduction
- */
-enum ERROR_CODE
-{
-    FILE_NOT_OPEN = 1,
-    SVORACHIVAEMSY_PAMYTI_PIZDA  = 1337, 
-    NOT_COPIED_IN_ARRAY = 2006,
-    SANYA = 2003 //в слуае, если наебланил пользователь
+    FREAD_ERRORS = 1,
+    SANYA_MOMENT = 1337,
+    FILE_PITERYALSYA = 1488
 };
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////FUNCTION_FOR_WORK/////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * @brief This function counts the bytes in a file. Then it makes an array.
- * @param *wt - pointer on the struct 
- * @param *pointer_name_on_file everything is clear here anyway
- */
-void proccesing_file(WORK_TEXT* wt, FILE *pointer_name_on_file); 
+
 
 /**
- * @brief This function is used to create array for saved source text
- * @param *pointer_name_on_file - the name of the pointer to the open file
- * @param *wt - pointer on the struct
+ * @brief this function fill in the WORK_TEXT structure (constructor)
+ * @param WORK_TEXT *wt this is a pointer on the struct
+ * @param FILE *pointer_on_file this is a pointer to the stream (to an open file)
  */
-void created_array_for_saved(FILE *pointer_name_on_file, WORK_TEXT *wt);
+void processing_file(WORK_TEXT *wt, FILE *pointer_on_file);
 
 /**
- * @brief this function frees up the memory allocated for the array.
- * @param *wt this is a pointer to the structure that contains the array.
- * @param choose this variable responds for choosing to clear the array //check enum
+ * @brief this function counts the number of bytes in a file
+ * @param WORK_TEXT *wt this is a pointer on the struct
+ * @param FILE *pointer_on_file this is a pointer to the stream (to an open file)
  */
-void free_memory_array(WORK_TEXT *wt, int choose);
+void get_byte_in_file(WORK_TEXT *wt, FILE *pointer_on_file);
 
 /**
- * @brief tgis function creates an array of pointers
- * @param *wt this is a pointer to the struct WORK_TEXT
+ * @brief This function creates a buffer array to store text
+ * @param WORK_TEXT *wt this is a pointer on the struct
+ * @param FILE *pointer_on_file this is a pointer to the stream (to an open file) 
  */
-void create_array_strings(WORK_TEXT *wt);
+void created_array_buffer(WORK_TEXT *wt, FILE *pointer_on_file);
+/**
+ * @brief this function counts the number of lines and replaces the buffer '\n' with '\0'
+ * @param WORK_TEXT *wt this is a pointer to the struct
+ */
+void counting_lines(WORK_TEXT *wt);
 
 /**
- * @brief this function writes data to an output file.
- * @param *wt this is a pointer to the struct WORK_TEXT
- * @param ara_delay_vibor this variable is responsible for selecting the recorded array (sorted or original)
- * @param *output this is a pointer to the file
+ * @brief this fucntion create array of strings
+ * @param WORK_TEXT *wt this is a pointer to the struct
  */
-void write_in_output_file(WORK_TEXT *wt, int ara_delay_vibor, FILE *output);
+void create_array_of_strings(WORK_TEXT *wt);
 
 /**
- * @brief this is instruction
+ * @brief this function writes the original and sorted version of the text to the file
+ * @param WORK_TEXT *wt this is a pointer to the struct
+ * @param FILE *pointer_on_file this is a pointer to the stream (to an open file)
  */
-void nemnoga_instruction(void);
+void write_to_file_buffer(WORK_TEXT *wt, FILE *pointer_on_file);
+
+/**
+ * @brief Well, like a classic destructor
+ * @param WORK_TEXT *wt this is a pointer to the struct
+ */
+void destructor_for_struct(WORK_TEXT *wt);
+
+/**
+ * @brief This function checks the pointer to the stream (file)
+ * @param FILE *pointer_name the very pointer
+ */
+void check_file(FILE *pointer_name); 
+
+/**
+ * @brief function-checking user input
+ * @param char* buffer this is a name file
+ */
+void check_user_input(char *buffer);
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////FUNCTION_FOR_SORTED///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 /**
  * @brief comparator, which is used to sort by beginning
@@ -133,7 +133,7 @@ void swap_element_array(char **array, size_t i, size_t j);
 /**
  * @brief needs no introduction
  */
-void bubble_sort(WORK_TEXT *wt);
+void bubble_sort(WORK_TEXT *wt, int (*comparator_hacha)(const void *a, const void *b));
 
 /**
  * @brief array sorting function
