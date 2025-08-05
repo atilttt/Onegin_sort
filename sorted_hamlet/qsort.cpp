@@ -45,9 +45,9 @@
         size_t size_string_s1 = strlen(s1);
         size_t size_string_s2 = strlen(s2);
 
-        if (size_string_s1 == 0 && size_string_s2 == 0) return 0;
-        if (size_string_s1 == 0 && size_string_s2 != 0) return -1;
-        if (size_string_s1 != 0 && size_string_s2 == 0) return 1;
+        //if (size_string_s1 == 0 && size_string_s2 == 0) return 0;
+        //if (size_string_s1 == 0 && size_string_s2 != 0) return -1; //проверки на NULL уже не нужны
+       // if (size_string_s1 != 0 && size_string_s2 == 0) return 1;
 
         const char *new_s1 = s1 + size_string_s1 - 1; // обработка '\0'
         const char *new_s2 = s2 + size_string_s2 - 1; //обработка '\0'
@@ -72,58 +72,53 @@
         return 0;
     }
 
-    void swap_element_array(char **array, size_t i, size_t j)
-    {   
-        assert(array);
-
-        char *temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+    void swap_element_array(void *a, void *b, size_t size) {
+        if (a == b) return;
+    
+        void* temp = malloc(size);  
+        memcpy(temp, a, size);
+        memcpy(a, b, size);
+        memcpy(b, temp, size);
     }
 
-    void bubble_sort(WORK_TEXT *wt, int (*comporator_hacha) (const void * a, const void * b))
+
+    void bubble_sort(WORK_TEXT *wt, int (*comparator)(const void *, const void *))
     {
         assert(wt);
-
+        assert(wt->text_line);
 
         for (size_t i = 0; i < wt->line_in_file - 1; i++)
-        { 
+        {
             for (size_t j = 0; j < wt->line_in_file - i - 1; j++)
-            { 
-                if (comporator_hacha(&(wt->text_line[j]), &(wt->text_line[j + 1])) > 0)
-                { 
-                    swap_element_array(wt->text_line, j, j+1);
+            {
+                if (comparator(&wt->text_line[j], &wt->text_line[j + 1]) > 0)
+                {
+                    swap_element_array(&wt->text_line[j], &wt->text_line[j + 1], sizeof(char*));
                 }
             }
         }
     }
 
+     
+    void hach_edition_qsort(void *base, size_t nmemb, size_t size, int (*comparator_hacha)(const void *, const void *)) {
+        if (nmemb <= 1) return;
 
-    //я бы даже назвал хач Ломуто эдишн
-    void hach_edition_qsort(WORK_TEXT *wt, size_t low, size_t high, int (*comp)(const void *a, const void *b))
-    {
-        assert(wt);
-        assert(comp);
+        char *array = (char*)base;
+        size_t pivot_idx = nmemb - 1;
+        size_t i = 0;
 
-
-        if (low >= high) return;
-
-        char **array = wt->text_line;
-
-        char *pivot = array[high];
-        size_t i = low;
-
-        for (size_t j = low; j < high; j++)
-        {
-            if (comp(&array[j], &pivot) < 0)
-            {
-                swap_element_array(array, i, j);
+        for (size_t j = 0; j < pivot_idx; j++) {
+            if (comparator_hacha(array + j*size, array + pivot_idx*size) < 0) {
+                swap_element_array(array + i*size, array + j*size, size);
                 i++;
             }
         }
+        
 
-        swap_element_array(array, i, high);
+        swap_element_array(array + i * size, array + pivot_idx * size, size);
 
-        if (i > 0) hach_edition_qsort(wt, low, i - 1, comp); 
-        hach_edition_qsort(wt, i + 1, high, comp);           
+        if (i > 0) 
+            hach_edition_qsort(array, i, size, comparator_hacha);
+        if (nmemb - i - 1 > 0)
+            hach_edition_qsort(array + (i + 1) * size, nmemb - i - 1, size, comparator_hacha);
     }

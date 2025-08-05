@@ -4,68 +4,75 @@ void processing_file(WORK_TEXT *wt, FILE *pointer_on_file)
 { 
     assert(wt);
 
-    get_byte_in_file(wt, pointer_on_file); 
-    created_array_buffer(wt, pointer_on_file);
-    counting_lines(wt);
-    create_array_of_strings(wt);
+    wt->all_symbol = get_byte_in_file(wt, pointer_on_file); 
+    wt->buffer = created_array_buffer(wt, pointer_on_file);
+    wt->line_in_file = counting_lines(wt);
+    wt->text_line = create_array_of_strings(wt);
 }
 
-void get_byte_in_file(WORK_TEXT *wt, FILE *pointer_on_file)
+size_t get_byte_in_file(WORK_TEXT *wt, FILE *pointer_on_file)
 { 
     assert(wt);
     assert(pointer_on_file);
 
     assert(fseek(pointer_on_file, 0, SEEK_END) == 0);
-    wt->all_symbol = (size_t) ftell(pointer_on_file);
+    size_t byte_in_file = (size_t) ftell(pointer_on_file);
     rewind(pointer_on_file);
+
+    return byte_in_file;
 }
 
-void created_array_buffer(WORK_TEXT *wt, FILE *pointer_on_file)
+char* created_array_buffer(WORK_TEXT *wt, FILE *pointer_on_file)
 { 
     assert(wt);
     assert(pointer_on_file);
 
-    wt->buffer = (char *)calloc(wt->all_symbol + 1, sizeof(char));
-    assert(wt->buffer);
+    char* buffer = (char *)calloc(wt->all_symbol + 1, sizeof(char));
+    assert(buffer);
 
-    size_t result = fread(wt->buffer, sizeof(char), wt->all_symbol, pointer_on_file);
+    size_t result = fread(buffer, sizeof(char), wt->all_symbol, pointer_on_file);
 
     if (result < wt->all_symbol)
     {
         fprintf(stderr, "the fread function is not working properly\n");
         exit(FREAD_ERRORS);
     }
+
+    return buffer;
 }
 
-void counting_lines(WORK_TEXT *wt)
+size_t counting_lines(WORK_TEXT *wt)
 { 
     assert(wt);
 
     char *ptr_buffer = wt->buffer; // это для того самого strchr
+    size_t line = 0;
 
     while ((ptr_buffer = strchr(ptr_buffer, '\n')) != NULL)
     { 
         *ptr_buffer = '\0';
         ptr_buffer++;
-        wt->line_in_file++;
+        line++;
     }
 
-    wt->line_in_file++;
+    line++;
+
+    return line;
 }
 
-void create_array_of_strings(WORK_TEXT *wt)
+char** create_array_of_strings(WORK_TEXT *wt)
 { 
     assert(wt);
 
-    wt->text_line = (char **) calloc(wt->line_in_file, sizeof(char *));
-    assert(wt->text_line);
+    char** text_line = (char **) calloc(wt->line_in_file, sizeof(char *));
+    assert(text_line);
 
     char *ptr_on_buffer_for_search_0 = wt->buffer;
     char *ptr_on_buffer_for_saved = wt->buffer; 
     
     for(size_t i = 0; i < wt->line_in_file; i++)
     { 
-        wt->text_line[i] = ptr_on_buffer_for_saved;
+        text_line[i] = ptr_on_buffer_for_saved;
 
         while (*ptr_on_buffer_for_search_0 != '\0')
         { 
@@ -74,7 +81,9 @@ void create_array_of_strings(WORK_TEXT *wt)
 
         ptr_on_buffer_for_search_0++;               
         ptr_on_buffer_for_saved = ptr_on_buffer_for_search_0;
-    }   
+    }
+    
+    return text_line;
 }
 
 void write_to_file_buffer(WORK_TEXT *wt, FILE *pointer_on_file)

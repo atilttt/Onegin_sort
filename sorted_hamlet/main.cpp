@@ -39,7 +39,7 @@ int main(void)
     printf("recording the original text\n");
     write_to_file_buffer(&wt, output);
     
-    hach_edition_qsort(&wt, 0, wt.line_in_file - 1, comp_by_beginning);
+    hach_edition_qsort(wt.text_line, wt.line_in_file, sizeof(char*), comp_by_beginning);
     write_to_file_buffer(&wt, output);
     printf("We recorded the sorting by the beginning of the lines\n");
 

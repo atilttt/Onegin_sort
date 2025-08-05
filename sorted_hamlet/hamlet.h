@@ -50,26 +50,31 @@ void processing_file(WORK_TEXT *wt, FILE *pointer_on_file);
  * @brief this function counts the number of bytes in a file
  * @param WORK_TEXT *wt this is a pointer on the struct
  * @param FILE *pointer_on_file this is a pointer to the stream (to an open file)
+ * @return the number of bytes in the file
  */
-void get_byte_in_file(WORK_TEXT *wt, FILE *pointer_on_file);
+size_t get_byte_in_file(WORK_TEXT *wt, FILE *pointer_on_file);
 
 /**
  * @brief This function creates a buffer array to store text
  * @param WORK_TEXT *wt this is a pointer on the struct
  * @param FILE *pointer_on_file this is a pointer to the stream (to an open file) 
+ * @return a pointer to the beginning of the buffer array
  */
-void created_array_buffer(WORK_TEXT *wt, FILE *pointer_on_file);
+char* created_array_buffer(WORK_TEXT *wt, FILE *pointer_on_file);
+
 /**
  * @brief this function counts the number of lines and replaces the buffer '\n' with '\0'
  * @param WORK_TEXT *wt this is a pointer to the struct
+ * @return the number of lines in the file
  */
-void counting_lines(WORK_TEXT *wt);
+size_t counting_lines(WORK_TEXT *wt);
 
 /**
  * @brief this fucntion create array of strings
  * @param WORK_TEXT *wt this is a pointer to the struct
+ * @return pointer to the beginning of the text_line array
  */
-void create_array_of_strings(WORK_TEXT *wt);
+char** create_array_of_strings(WORK_TEXT *wt);
 
 /**
  * @brief this function writes the original and sorted version of the text to the file
@@ -123,12 +128,11 @@ int comp_by_rhyme(const void *a, const void *b);
 
 /**
  * @brief this function swaps the sorted elements (needed for bubble sort)
- * @param **array - this is an array of strings that we will sort.
- * @param i - the element that is in the current position
- * @param j - the next element of the array
- * @param *wt - a pointer to the struct
+ * @param void *a - a pointer to any type
+ * @param void *b - a pointer to any type
+ * @param size_t size - type size
  */
-void swap_element_array(char **array, size_t i, size_t j);
+void swap_element_array(void *a, void *b, size_t size);
 
 /**
  * @brief needs no introduction
@@ -136,12 +140,11 @@ void swap_element_array(char **array, size_t i, size_t j);
 void bubble_sort(WORK_TEXT *wt, int (*comparator_hacha)(const void *a, const void *b));
 
 /**
- * @brief array sorting function
- * @param *wt - a pointer to the struct
- * @param low - index of the beginning of the sorted section of the array
- * @param high - index of the end of the sorted section of the array
- * @param *comp this is a pointer to the comparator function 
+ * @param void *base - it represents pointer to the first element of the array to be sorted.
+ * @param size_t nmemb - it represents number of element in the array.
+ * @param size_t soze - it represents size of each element in the array.
+ * @param int (*comparator_hacha)(void *a, void *b) - it represent a function pointer to a comparison function that compares two elements.
  */
-void hach_edition_qsort(WORK_TEXT *wt, size_t low, size_t high, int (*comp)(const void *a, const void *b));
+void hach_edition_qsort(void *base, size_t nmemb, size_t size, int (*comparator_hacha)(const void *, const void *));
 
 #endif //HAMLET_H
