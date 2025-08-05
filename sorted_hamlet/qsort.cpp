@@ -73,12 +73,16 @@
     }
 
     void swap_element_array(void *a, void *b, size_t size) {
-        if (a == b) return;
+        assert(a != b);
     
-        void* temp = malloc(size);  
+        void* temp = malloc(size);
+        assert(temp);
+
         memcpy(temp, a, size);
         memcpy(a, b, size);
         memcpy(b, temp, size);
+        
+        free(temp);
     }
 
 
