@@ -104,25 +104,38 @@
     }
 
      
-    void hach_edition_qsort(void *base, size_t nmemb, size_t size, int (*comparator_hacha)(const void *, const void *)) {
-        if (nmemb <= 1) return;
-
-        char *array = (char*)base;
+    void hach_edition_qsort(void *base, size_t nmemb, size_t size, int (*comparator_hacha)(const void *, const void *)) 
+    {
+        if (nmemb <= 1) {
+            return;
+        }
+  
         size_t pivot_idx = nmemb - 1;
         size_t i = 0;
 
-        for (size_t j = 0; j < pivot_idx; j++) {
-            if (comparator_hacha(array + j*size, array + pivot_idx*size) < 0) {
-                swap_element_array(array + i*size, array + j*size, size);
+     
+        for (size_t j = 0; j < pivot_idx; j++) 
+        {
+            if (comparator_hacha(base + j * size, base + pivot_idx * size) < 0) 
+            {
+                if (i != j) 
+                {  
+                    swap_element_array(base + i * size, base + j * size, size);
+                }
                 i++;
             }
         }
-        
 
-        swap_element_array(array + i * size, array + pivot_idx * size, size);
+        if (i != pivot_idx) 
+        {
+            swap_element_array(base + i * size, base + pivot_idx * size, size);
+        }
 
-        if (i > 0) 
-            hach_edition_qsort(array, i, size, comparator_hacha);
-        if (nmemb - i - 1 > 0)
-            hach_edition_qsort(array + (i + 1) * size, nmemb - i - 1, size, comparator_hacha);
-    }
+
+        if (i > 0) {
+            hach_edition_qsort(base, i, size, comparator_hacha);
+        }
+        if (nmemb - i - 1 > 0) {
+            hach_edition_qsort(base + (i + 1) * size, nmemb - i - 1, size, comparator_hacha);
+        }
+}
