@@ -3,6 +3,7 @@
 void processing_file(WORK_TEXT *wt, FILE *pointer_on_file)
 { 
     assert(wt);
+    assert(pointer_on_file);
 
     wt->all_symbol = get_byte_in_file(wt, pointer_on_file); 
     wt->buffer = created_array_buffer(wt, pointer_on_file);
@@ -125,7 +126,7 @@ void check_file(FILE *pointer_name)
     }
 }
 
-void check_user_input(char *buffer)
+void user_input(char *buffer)
 { 
     assert(buffer);
 

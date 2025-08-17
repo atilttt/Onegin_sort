@@ -99,7 +99,7 @@ void check_file(FILE *pointer_name);
  * @brief function-checking user input
  * @param char* buffer this is a name file
  */
-void check_user_input(char *buffer);
+void user_input(char *buffer);
 
 
 

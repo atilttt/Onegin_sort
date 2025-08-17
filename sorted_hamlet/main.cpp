@@ -5,7 +5,7 @@ int main(void)
     printf("Hello dear user. Welcome to the wonderful LARGE text sorting program.\nSo, enter the name of the file where your text is stored.\n\n");
 
     char name_input_file[SYMBOL_IN_FILE_NAME] = {};
-    check_user_input(name_input_file);
+    user_input(name_input_file);
     
     FILE *input = fopen(name_input_file, "r");
     check_file(input);
@@ -31,7 +31,7 @@ int main(void)
     printf("\ngo, please write the name of the output file\n");
     printf("the rules are the same\n");
     char name_output_file[SYMBOL_IN_FILE_NAME] = {};
-    check_user_input(name_output_file);
+    user_input(name_output_file);
 
     FILE *output = fopen(name_output_file, "w");
     check_file(output);
